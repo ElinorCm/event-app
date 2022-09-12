@@ -9,11 +9,12 @@ import {
 } from '../actions';
 
 const initialState = {
-  isGetSUsersLoading:false, 
+  isGetUsersLoading:false, 
   isSearchLoading: false,
   list:[],
   searchInput: '',
   searchResults: [],
+  hasSearchError: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -45,18 +46,19 @@ const reducer = (state = initialState, action) => {
     case SUBMIT_USERS_SEARCH:
       return {
         ...state,
+        searchResults: [],
         isSearchLoading: true,
       };
     case SUBMIT_USERS_SEARCH_ERROR:
       return {
         ...state,
         isSearchLoading: false, 
-        hasSearchError: true 
+        hasSearchError: true, 
       };
     case SUBMIT_USERS_SEARCH_SUCCESS:
       return {
         ...state,
-        searchResults: [action.users],
+        searchResults: action.users,
         isSearchLoading: false, 
         hasSearchError: false
       };

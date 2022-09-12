@@ -1,30 +1,70 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, Icon, Label } from 'semantic-ui-react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import "../styles/eventCardDescription.scss";
+import { Card, Icon } from 'semantic-ui-react';
 
-import events from '../data/eventsData';
+import DateCard from './DateCard';
 
-function EventCardDescription() {
+import "../styles/eventCardMain.scss";
+import { getEvents } from '../store/actions';
+import { findEventBySlug } from '../selectors/events';
 
-  const params = useParams();
-  const event = events.find((e) => e.slug === params.slug);
+
+function EventCardMain() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getEvents());
+  }, [dispatch]);
+
+  const { slug } = useParams();
+
+  const event = useSelector((state) => findEventBySlug(state.events.list, slug));
+
+  // const event = useSelector((state) => findEventBySlug(state.events.list, slug));
+
+  // const event = events.find((e) => e.slug === 'pool-party');
   
   return (
+    
+      
     <div className="event-card">
-        <div className='description-container' key={event.id}>
-            <div className="event-description">
-            <img
-              className="event-description__img"
-              src={event.media}
-              alt={event.title}
-            />
+        <div className='description-container'>
+          { event &&
+          <div className="event-description">
+              <img
+                className="event-description__img"
+                src={event.media}
+                alt={event.title}
+              />
             <section className='event-description__details'>
+            <section className='event-description__details__social-icons'>
+              <Icon 
+                name='check square' 
+                size='large'
+                style={{ 
+                  color: '#E0E0E0',
+                  marginTop: '0.6em',
+                  cursor: 'pointer',
+                }}
+              />            
+              <Icon 
+                name='heart' 
+                size='large'
+                style={{ 
+                  color: '#E0E0E0',
+                  marginTop: '0.6em',
+                  cursor: 'pointer',
+                }}
+              />
+          </section>
               <section className="event-description__details__card">
                 <Card 
                   fluid
                   style={{
-                    height: '5.6rem',
+                    height: '8.5rem',
                     boxShadow: 'none',
                     background: 'transparent',
                     display: 'flex',
@@ -42,6 +82,17 @@ function EventCardDescription() {
                   >
                     {event.title}
                   </Card.Header>
+                  <Card.Header
+                    style={{
+                      fontSize: '0.8rem',
+                      fontWeight: '500',
+                      color: 'white',
+                      paddingBottom: '0.6rem'
+                    }}
+                  >
+                    Jean-Michel
+                    {/* {event.code_user_manager} */}
+              </Card.Header>
                   <Card.Meta
                     style={{
                       color: 'white',
@@ -57,15 +108,8 @@ function EventCardDescription() {
                   >
                     {event.description}
                   </Card.Description>
-                  <Card.Content
-                    style={{
-                      border: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '0px',
-                    }}
-                  >
-                    {
+                  <Card.Content>
+                    {/*
                       event.tag.map((t) => {
                         return (
                           <Label 
@@ -77,7 +121,7 @@ function EventCardDescription() {
                           </Label>
                         )
                       })
-                    }
+                    */}
                   </Card.Content>
                 </Card>
                 <section className="event-description__details__card__participants">
@@ -87,22 +131,24 @@ function EventCardDescription() {
                       color:'white'
                     }} 
                   />
+                  {/*
                   <p className="event-description__details__card__participants__content" >
                     {event.user_attend_event.length} participants
                   </p>
+                  */}
                 </section>
                 <section className="event-description__details__card__date">
-                  <div className="event-description__details__card__date__day"><div>{event.start.getDate()}</div></div>
-                  <div className="event-description__details__card__date__month"><div>{event.start.toLocaleString('fr-fr', { month: 'short' }).toUpperCase().replace('.', '')}</div></div>
+                <DateCard 
+                  start={event.start}
+                />
                 </section>
               </section>
             </section>
-            <section className="event-description__details__card__description">
-            </section>
-          </div>
+        </div>
+        }
       </div>
     </div>
   );
 }
 
-export default EventCardDescription;
+export default EventCardMain;

@@ -1,5 +1,19 @@
 import axios from 'axios';
-import { GET_EVENT, GET_EVENTS, getEventsSuccess, getEventsError, SUBMIT_EVENTS_SEARCH, submitEventsSearchSuccess, submitEventsSearchError } from '../actions';
+
+import { 
+  GET_TAGS, 
+  getTagsError, 
+  getTagsSuccess,
+  GET_EVENT,
+  getEventSuccess,
+  getEventError,
+  GET_EVENTS,
+  getEventsSuccess,
+  getEventsError,
+  SUBMIT_EVENTS_SEARCH,
+  submitEventsSearchSuccess,
+  submitEventsSearchError 
+} from '../actions';
 
 const eventsMiddleware = (store) => (next) => (action) => {
   if (action.type === GET_EVENTS) {
@@ -34,11 +48,11 @@ const eventsMiddleware = (store) => (next) => (action) => {
     
     next(action);
     const state = store.getState();
-    const id = state.event.activeEvent;
+    const id = state.event.activeEvent.toString();
 
     const config = {
       method: 'get',
-      url: `https://sonow.herokuapp.com/api/event${id}`, 
+      url: `http://sonow.herokuapp.com/api/event/${id}`, 
       headers: { 
         'content-type': 'application/json; charset=utf-8', 
         'Access-Control-Allow-Origin': '*',
@@ -49,12 +63,36 @@ const eventsMiddleware = (store) => (next) => (action) => {
     axios(config)
       .then((response) => {
         console.log(response.data);
-        store.dispatch(getEventsSuccess(response.data));
+        store.dispatch(getEventSuccess(response.data));
       })
       .catch(() => {
-        store.dispatch(getEventsError());
+        store.dispatch(getEventError());
       });
+
+    } else if (action.type === GET_TAGS) {
+      next(action);
+      const state = store.getState();
+      
+      const config = {   
+        method: 'get',
+        url: 'http://sonow.herokuapp.com/api/tag/withevents', 
+        headers: { 
+          'content-type': 'application/json; charset=utf-8', 
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': `Bearer ${state.user.accessToken}`
+        }, 
+      }
+    
+      axios(config)
+        .then((response) => {
+          console.log(response.data);
+          store.dispatch(getTagsSuccess(response.data));
+        })
+        .catch(() => {
+          store.dispatch(getTagsError());
+        });
   
+
   } else if (action.type === SUBMIT_EVENTS_SEARCH) {
     next(action);
     const state = store.getState();
@@ -74,7 +112,7 @@ const eventsMiddleware = (store) => (next) => (action) => {
   
     axios(config)
       .then((response) => {
-        console.log(`submit events search success ${response.data}`);
+        console.log(response.data);
         store.dispatch(submitEventsSearchSuccess(response.data));
       })
       .catch(() => {

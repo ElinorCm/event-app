@@ -1,8 +1,7 @@
-//TODO: Implémentation de JOI validation schema.
-
 require('dotenv').config();
 const eventDataMapper = require('../models/event');
 const { ApiError } = require("../services/errorHandler");
+
 
 module.exports = {
 
@@ -38,7 +37,7 @@ module.exports = {
 
 
     //Méthode qui permet de rechercher un évènement par son titre.
-    async getOneEventByTitle(req, res) {
+    async getEventsByTitle(req, res) {
             const eventDb = await eventDataMapper.findByTitle(req.body.title);
 
             if(!eventDb){
@@ -49,11 +48,29 @@ module.exports = {
     },
 
 
+    async getEventsByPinUser(req, res) {
+            const result = await eventDataMapper.findByPin(req.body.user_id);
 
-// TODO: A TESTER QUAND LES DONNEES DE LA TABLE DE LIAISON SERONT INSCRITES EN BDD
+            if(!result) {
+                throw new ApiError('No events in favorites', {statusCode: 404 });
+            };
+
+            return res.json(result);
+    },
+
+    async getEventsByAttendUser(req, res) {
+        const result = await eventDataMapper.findByAttend(req.body.user_id);
+
+        if(!result) {
+            throw new ApiError('No events in favorites', {statusCode: 404 });
+        };
+
+        return res.json(result);
+},
+
     //Méthode qui permet de rechercher un évènement en fonction de leur catégorie.
     async getByTagId(req, res) {
-            const events = await eventDataMapper.findByTagId(req.params.event_id);
+            const events = await eventDataMapper.findByTagId(req.params.tag_id);
 
             if(!events) {
                 throw new ApiError('Event not found', {statusCode: 404 });
@@ -63,6 +80,67 @@ module.exports = {
     },
 
 
+    //Méthode qui permet d'ajouter un évènement aux favoris de l'utilisateur.
+    async addToBookmarks(req, res) {
+
+        const result = await eventDataMapper.pinEvent(req.body.user_id, req.body.event_id);
+
+        if(!result) {
+            throw new ApiError('Event already added', {statusCode: 400 });
+        } else {
+
+            return res.status(200).json({result, "message": "Event added to bookmarks succesfully"});
+        }
+    },
+
+    //Méthode qui permet de supprimer un évènement aux favoris de l'utilisateur.
+    async delToBookmarks(req, res) {
+
+        const result = await eventDataMapper.unpinEvent(req.body.user_id, req.body.event_id);
+
+        if(!result) {
+            throw new ApiError('Event not found', {statusCode: 404 });
+        } else{
+
+            return res.status(200).json({result, "message": "Event deleted from bookmarks succesfully"});
+        }
+    },
+
+
+//Méthode qui permet de s'identifier comme participant à un évènement.
+async addAttendEvent(req, res) {
+
+    const result = await eventDataMapper.pinAttendEvent(req.body.user_id, req.body.event_id);
+
+    if(!result) {
+        throw new ApiError('Event already added', {statusCode: 400 });
+    } else {
+
+        return res.status(200).json({result, "message": "User is attendind"});
+    }
+},
+
+//Méthode qui permet de supprimer sa participation à un évènement.
+async delAttendEvent(req, res) {
+
+    const result = await eventDataMapper.unpinAttendEvent(req.body.user_id, req.body.event_id);
+
+    if(!result) {
+        throw new ApiError('Event not found', {statusCode: 404 });
+    } else{
+
+        return res.status(200).json({result, "message": "User is not attending"});
+    }
+},
+
+    async followEvent () {
+
+    },
+
+
+    async unfollowEvent () {
+
+    },
 
 
 
@@ -108,6 +186,6 @@ module.exports = {
             };
             
             await eventDataMapper.delete(req.params.event_id);
-            return res.status(204).json();
+            return res.status(200).json({code: 200, message: "Event has been deleted"});
     }
 };

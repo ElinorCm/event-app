@@ -1,12 +1,18 @@
 import {
-  CHANGE_FAVORITES_ACTIVE_ITEM, 
   CHANGE_FRIENDS_ACTIVE_ITEM, 
+  CHANGE_FAVORITES_ACTIVE_ITEM, 
   CHANGE_LOGIN_INPUTS, 
   CHANGE_PROFIL_ACTIVE_ITEM,
   CHANGE_SIGNUP_INPUTS,
+  GET_EVENTS_ATTENDING,
+  GET_EVENTS_ATTENDING_ERROR, 
+  GET_EVENTS_ATTENDING_SUCCESS,
   GET_FAVORITES,
   GET_FAVORITES_ERROR, 
   GET_FAVORITES_SUCCESS,
+  GET_FOLLOWED,
+  GET_FOLLOWED_ERROR, 
+  GET_FOLLOWED_SUCCESS,
   GET_FOLLOWERS,
   GET_FOLLOWERS_ERROR, 
   GET_FOLLOWERS_SUCCESS,
@@ -17,9 +23,6 @@ import {
   SUBMIT_LOGIN, 
   SUBMIT_LOGIN_SUCCESS,
   SUBMIT_LOGIN_ERROR, 
-  GET_SUBSCRIPTIONS,
-  GET_SUBSCRIPTIONS_ERROR,
-  GET_SUBSCRIPTIONS_SUCCESS,
   SUBMIT_SIGNUP,
   SUBMIT_SIGNUP_SUCESS,
   SUBMIT_SIGNUP_ERROR,
@@ -27,12 +30,21 @@ import {
 
 const initialState = {
   accessToken: null,
+  attending: {
+    isLoading: false,
+    list: []
+  },
   favorites: {
     activeItem: 'Tous mes favoris',
     isLoading: false,
+    list: []
   },
   friends: {
-    activeItem: 'Abonnes',
+    activeItem: 'Trouver des contacts',
+  },
+  followed: {
+    list: [],
+    isLoading: false, 
   },
   followers: {
     list: [],
@@ -54,6 +66,7 @@ const initialState = {
     passwordInput:'',
     confirmedPasswordInput:'',
     isLoading: false,
+    isRegistered: false
   }, 
   subscriptions: {
     list: [], 
@@ -74,9 +87,9 @@ const reducer = (state = initialState, action) => {
     case CHANGE_FRIENDS_ACTIVE_ITEM:
       return {
         ...state,
-        friends : {
-          ...state.friends, 
-          activeItem: action.activeItem,
+        friends: {
+          ...state.friends,
+          activeItem: action.activeItem
         }
       };
     case CHANGE_LOGIN_INPUTS:
@@ -103,6 +116,32 @@ const reducer = (state = initialState, action) => {
           [action.inputName]: action.newValue,
         }
       };
+      case GET_EVENTS_ATTENDING:
+        return {
+          ...state,
+          attending: {
+            isLoading:true,
+          }
+        };
+      case GET_EVENTS_ATTENDING_SUCCESS:
+        return {
+          ...state,
+          attending: {
+            ...state.attending,
+            list: action.events,
+            isLoading: false, 
+            hasError: false,
+          }
+        };
+    case GET_EVENTS_ATTENDING_ERROR:
+      return {
+        ...state,
+        attending: {
+          ...state.attending,
+          isLoading:false,
+          hasError: true
+        }
+      };
       case GET_FAVORITES:
         return {
           ...state,
@@ -115,8 +154,9 @@ const reducer = (state = initialState, action) => {
           ...state,
           favorites: {
             ...state.favorites,
+            activeItem: 'Tous mes favoris',
             list: action.events,
-            isLoading:false, 
+            isLoading: false, 
             hasError: false,
           }
         };
@@ -129,6 +169,33 @@ const reducer = (state = initialState, action) => {
           hasError: true
         }
       };
+      case GET_FOLLOWED:
+        return {
+          ...state,
+          followed: {
+            ...state.followed, 
+            isLoading: true,
+          }
+        };
+      case GET_FOLLOWED_SUCCESS:
+        return {
+          ...state,
+          followed: {
+            ...state.followed,
+            list:action.followed,
+            isLoading: false, 
+            hasError: false,
+          }
+        };
+      case GET_FOLLOWED_ERROR:
+        return {
+          ...state,
+          followed: {
+            ...state.followed,
+            isLoading:false, 
+            hasError: true,
+          }
+        };
     case GET_FOLLOWERS:
       return {
         ...state,
@@ -142,7 +209,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         followers: {
           ...state.followers,
-          list:[...action.followers],
+          list:action.followers,
           isLoading: false, 
           hasError: false,
         }
@@ -172,33 +239,6 @@ const reducer = (state = initialState, action) => {
         isLoading:false, 
         hasGetSUserError: true,
       }; 
-    case GET_SUBSCRIPTIONS:
-      return {
-        ...state,
-        subscriptions: {
-          ...state.subscriptions, 
-          isLoading: true,
-        }
-      };
-    case GET_SUBSCRIPTIONS_SUCCESS:
-      return {
-        ...state,
-        subscriptions: {
-          ...state.subscriptions,
-          list:[...action.subscriptions],
-          isLoading: false, 
-          hasError: false,
-        }
-      };
-    case GET_SUBSCRIPTIONS_ERROR:
-      return {
-        ...state,
-        subscriptions: {
-          ...state.subscriptions,
-          isLoading:false, 
-          hasError: true,
-        }
-      };
     case LOGOUT:
       return {
         ...state,
@@ -207,9 +247,7 @@ const reducer = (state = initialState, action) => {
           activeItem: 'Tous mes favoris',
           isLoading: false,
         },
-        friends: {
-          activeItem: 'Abonnes',
-        },
+        friendsActiveItem: 'Abonnes',
         followers: {
           list: [],
           isLoading: false, 
@@ -251,6 +289,7 @@ const reducer = (state = initialState, action) => {
           ...state.signup, 
           isLoading: false,
           hasSignupError: false,
+          isRegistered: true,
         }
       };
     case SUBMIT_SIGNUP_ERROR:

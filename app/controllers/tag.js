@@ -1,17 +1,24 @@
-//TODO: Gestion des erreurs via un controller error.
-
-
 const tagDataMapper = require('../models/tag');
 const { ApiError } = require("../services/errorHandler");
 
 module.exports = {
+
+    async getAllTagWithEvents(req, res) {
+        const result = await tagDataMapper.findAllWithEvents();
+
+        if (!result) {
+            throw new ApiError('Not any tag in database', { statusCode: 404 });
+        }
+
+        return res.json(result);
+    },
 
     //Méthode qui permet de récupérer tous les tags.
     async getAllTags(_, res) {
             const tagDb = await tagDataMapper.findAll();
 
             if(!tagDb) {
-                throw new ApiError('Not any tag in database', {statusCode: 404 });
+                throw new ApiError('Not any tag in database', { statusCode: 404 });
             }
 
             return res.json(tagDb);
@@ -22,7 +29,7 @@ module.exports = {
             const tagDb = await tagDataMapper.findByPk(req.params.tag_id);
 
             if(!tagDb){
-                throw new ApiError('Tag not found', {statusCode: 404 });
+                throw new ApiError('Tag not found', { statusCode: 404 });
             };
             
             return res.json(tagDb);

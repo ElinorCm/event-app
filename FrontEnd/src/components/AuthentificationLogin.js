@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { Form } from 'semantic-ui-react';
+
 import { changeLoginInputs, submitLogin } from '../store/actions';
-import { Form } from 'semantic-ui-react'
+import '../styles/authentificationLogin.scss';
 
-import '../styles/loginForm.scss';
-
-function LoginForm() {
+function AuthentificationLogin() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function LoginForm() {
   const { 
     emailInput,
     passwordInput, 
-  } = useSelector((state) => state.user.login);
+  } = useSelector((state) => state.user.login) || {};
 
   const isConnected = useSelector ((state) => state.user.accessToken);
   
@@ -35,8 +35,8 @@ function LoginForm() {
       inverted 
       size='large' 
       style={{
-        margin: '0.1em 0',
-        padding: '1em 0'
+        margin: '1rem',
+        padding: '1rem'
       }}
       onSubmit={(e) => {handleSubmit(e)}}
     >
@@ -77,5 +77,5 @@ function LoginForm() {
 
 }
 
-export default LoginForm;
+export default AuthentificationLogin;
 

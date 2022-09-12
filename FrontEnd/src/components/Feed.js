@@ -2,32 +2,33 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getEvents } from '../store/actions';
+import { shuffle } from '../selectors/events';
 
 import ProtectedRoute from './ProtectedRoute';
-import FeedEvent from './FeedEvent';
+import EventCardSecondary from './EventCardSecondary';
 import "../styles/feed.scss";
-// import events from '../data/eventsData';
+
+
 
 function Feed() {
 
   const dispatch = useDispatch();
   
-  // to get events on page refresh
   useEffect(() => {
     dispatch(getEvents());
   }, [dispatch]);
 
-  // || [] to be abble to map before loadgin the events list 
-  const events = useSelector((state) => state.events.list) || [];
+  const events = shuffle(useSelector((state) => state.events.list)) || [];
 
   return (
     <div className="feed-container">
       <div className='feed-container__event'>
         {
           events.map((e) => (
-            <FeedEvent
+            <EventCardSecondary
               key={e.id}
               event={e}
+              params={'feed'}
             />
           ))
         }

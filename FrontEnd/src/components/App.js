@@ -6,16 +6,15 @@ import CreateAccount from './CreateAccount';
 import CreateEvent from './CreateEvent';
 import Fav from './Fav';
 import Feed from './Feed';
-import Filters from './Filters';
 import FriendsList from './FriendsList';
 import Nav from './Nav';
 import Page from './Page';
 import Profile from './Profile';
 import Search from './Search';
 import Error404 from './Error404';
-import EventCardDescription from './EventCardDescription';
+import EventCardMain from './EventCardMain';
 
-import '../styles/App.scss';
+import '../styles/app.scss';
 
 /*
 // Test data
@@ -96,15 +95,6 @@ function App() {
           )}
         />
         <Route
-          path='/autour-de-moi/filtres'
-          element={(
-            <Page title="Rechercher les événements autour de moi | SoNow">
-              <Filters />
-              <Nav />
-            </Page>
-          )}
-        />
-        <Route
           path='/creer-un-evenement'
           element={(
             <Page title="Créer un événement | SoNow">
@@ -135,7 +125,7 @@ function App() {
           path="/event/:slug"
           element={(
             <Page title="Événement | SoNow">
-              <EventCardDescription />
+              <EventCardMain />
               <Nav />
             </Page>
           )}

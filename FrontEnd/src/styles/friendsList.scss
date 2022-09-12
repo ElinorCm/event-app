@@ -3,15 +3,48 @@
   color: white;
   height: 92vh;
 
-  &__menu{
-    height: 8vh;
-  }
+    &__menu{
+      height: 8vh;
+      margin: 0 auto;
 
-  &__list{
-    height: 84vh; 
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: space-between;
+      &__main {
+        display: flex;
+      }
+
+    }
+
+    &__form {
+      width: 92vw;
+      margin: 0 auto;
+    }
+  
+    &__list{
+      height: 75vh;
+      overflow-y: scroll;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      background-color: black;
+    }
+
+}
+
+@media screen and (max-width: 430px) {
+  
+  .friends__menu {
+    height: 18vh;
   }
+  
+  .friends__menu__main {
+    margin: 0 auto;
+    flex-direction: column;
+  } 
+
+  .friends__menu__item {
+    width: 80vw;
+    display: flex;
+    justify-content: center;
+  } 
+
 }

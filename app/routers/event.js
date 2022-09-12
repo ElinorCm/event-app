@@ -13,6 +13,18 @@ router
     .post(controllerHandler(controller.createEvent));
 
 router
+    .route('/search')
+    .post(controllerHandler(controller.getEventsByTitle));
+
+router
+    .route('/getbookmarks')
+    .post(controllerHandler(controller.getEventsByPinUser));
+
+router
+    .route('/getattend')
+    .post(controllerHandler(controller.getEventsByAttendUser));
+
+router
     .route('/:event_id(\\d+)')
     .get(controllerHandler(controller.getOneEventById))
     .patch(controllerHandler(controller.updateEvent))
@@ -23,8 +35,14 @@ router
     .get(controllerHandler(controller.getByTagId));
 
 router
-    .route('/search')
-    .post(controllerHandler(controller.getOneEventByTitle));
+    .route('/bookmarks')
+    .post(controllerHandler(controller.addToBookmarks))
+    .delete(controllerHandler(controller.delToBookmarks));
+    
 
+router
+    .route('/attend')
+    .post(controllerHandler(controller.addAttendEvent))
+    .delete(controllerHandler(controller.delAttendEvent));
 
 module.exports = router;
