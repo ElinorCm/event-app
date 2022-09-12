@@ -1,6 +1,5 @@
-//TODO: Gestion des erreurs via un controller error.
-
 const client = require("../config/db");
+const { ApiError } = require('../services/errorHandler');
 
 module.exports = {
 
@@ -22,11 +21,11 @@ module.exports = {
         return undefined;
     };
 
-    return result.rows[0];
+    return result.rows;
 
     } catch (error) {
-      console.log(error);
-      return null;
+      res.json({status: "Not Found", code: 404, message: "User findAll throw an error"});
+      throw new ApiError('Users not found', {statusCode: 404 });
     };
   },
 
@@ -50,8 +49,8 @@ module.exports = {
 
     return result.rows[0];
     } catch (error) {
-      console.log(error);
-      return null;
+      res.json({status: "Not Found", code: 404, message: "User findByPk throw an error"});
+      throw new ApiError('User not found', {statusCode: 404 });
     };
   },
 
@@ -78,13 +77,13 @@ module.exports = {
     return result.rows[0];
 
     } catch (error) {
-      console.log(error);
-      return null;
+      res.json({status: "Not Found", code: 404, message: "User findByEmail throw an error"});
+      throw new ApiError('Users not found', {statusCode: 404 });
     };
   },
 
   //Rechercher un utilisateur par son surnom, son nom ou son prénom.
-  async findByNickname(nickName){
+  async findByNickname(nickname){
     try {
       //Je prépare une requête sql séparément pour éviter les injections.
       //J'utilise les jetons sql également par souci de sécurité.
@@ -92,9 +91,9 @@ module.exports = {
         text: `
           SELECT *
           FROM public.user
-          WHERE nickname = $1
+          WHERE nickname ILIKE $1
         `,
-        values: [nickName],
+        values: [`%${nickname}%`],
       };
 
       const result = await client.query(preparedQuery);
@@ -106,8 +105,9 @@ module.exports = {
     return result.rows[0];
 
     } catch (error) {
-      console.log(error);
-      return null;
+      res.json({status: "Not Found", code: 404, message: "User findByNickname throw an error"});
+      throw new ApiError('Users not found', {statusCode: 404 });
+      
     };
   },
 
@@ -130,37 +130,31 @@ module.exports = {
     return result.rows[0];
 
     } catch (error) {
-      console.log(error);
-      return null;
-    }
+      res.json({status: "Service Unvailable", code: 503, message: "User insert throw an error"});
+      throw new ApiError('User non inserted', {statusCode: 503 });
+    };
   },
 
   //Mettre à jours les infos d'un utilisateur en BDD.
   async update(id, user) {
     try {
-      //On récupère les champs et les valeurs de l'utilisateur
       const fields = Object.keys(user).map((prop, index) => `"${prop}" = $${index + 1}`);
       const values = Object.values(user);
-      //Je prépare une requête sql séparément pour éviter les injections.
-      //J'utilise les jetons sql également par souci de sécurité.
-      const preparedQuery = {
-        text: `
-        UPDATE public.user SET
-        ${fields}
-        WHERE id = $${fields.length + 1}
-        RETURNING *        
-        `,
-        values: [...values, id],
-      };
-  
-      const result = await client.query(preparedQuery);
-  
-    return result.rows[0];
+      const savedUser = await client.query(
+          `
+              UPDATE public.user SET
+                  ${fields}
+              WHERE id = $${fields.length + 1}
+              RETURNING *
+          `,
+          [...values, id],
+        );
+      return savedUser.rows[0];
 
     } catch (error) {
-      console.log(error);
-      return null;
-    }
+      res.json({status: "Service Unvailable", code: 503, message: "User update throw an error"});
+      throw new ApiError('User not updated', {statusCode: 503 });
+    };
   },
   
   //Supprimer un utilisateur de la BDD.
@@ -180,8 +174,8 @@ module.exports = {
       return !!result.rowCount;
       
     } catch (error) {
-      console.log(error);
-      return null;
-    }
+      res.json({status: "Service Unvailable", code: 503, message: "User delete throw an error"});
+      throw new ApiError('User not deleted', {statusCode: 503 });
+    };
   }
 };

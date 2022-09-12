@@ -1,8 +1,10 @@
-// import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 // import DistanceCalculator from 'distance-calculator-js';
 
-import '../styles/App.scss';
+import { getEvents } from '../store/actions';
+
 import Authentification from './Authentification';
 import CreateAccount from './CreateAccount';
 import CreateEvent from './CreateEvent';
@@ -11,9 +13,13 @@ import Feed from './Feed';
 import Filters from './Filters';
 import FriendsList from './FriendsList';
 import Nav from './Nav';
+import Page from './Page';
 import Profile from './Profile';
 import Search from './Search';
 import Error404 from './Error404';
+import EventCardDescription from './EventCardDescription';
+
+import '../styles/App.scss';
 
 /*
 // Test data
@@ -25,17 +31,10 @@ const m = DistanceCalculator.calculate(Tokyo, NewYork)/1000;
 console.log(m);
 */
 
-// TODO: 
-// Créer un composant fournisseur => Importer useState et createContext de React.
-// Instancier createContext dans une constante michelisable.
-// Définir le contexte comme étant un array []. => Contexte qui sera appelé dans les composants enfants par le hook useCOntext.
-
-
-
 function App() {
-
-  // const [user, setUser] = useState({});
   
+  const dispatch = useDispatch();
+
   // const [isLocationLoading, setIsLocationLoading] = useState(false);
   // const [latitude, setLatitude] = useState([]);
   // const [longitude, setLongitude] = useState([]);
@@ -56,96 +55,112 @@ function App() {
   //   navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   // }, []);
 
+  useEffect(() => {
+    console.log('premier rendu');
+    dispatch(getEvents());
+  }, []);
+
   return (
     <div className='App'>
-      
       <Routes>
-      <Route
+        <Route
           path='/'
           element={(
+            <Page title="SoNow">
               <Authentification />
+            </Page>
           )}
         />
         <Route
           path='/creer-un-compte'
           element={(
-            <CreateAccount />
+            <Page title="Creer un compte | SoNow">
+              <CreateAccount />
+            </Page>
           )}
         />
         <Route
           path='/feed'
           element={(
-            <>
-            <Feed />
-            <Nav />
-            </>
+            <Page title="Feed | SoNow">
+              <Feed />
+              <Nav />
+            </Page>
           )}
         />
         <Route
           path='/favoris'
           element={(
-            <>
-            <Fav />
-            <Nav />
-            </>
+            <Page title="Favoris | SoNow">
+              <Fav />
+              <Nav />
+            </Page>
           )}
         />
         <Route
           path='/autour-de-moi'
           element={(
-            <>
-            <Search />
-            <Nav />
-            </>
+            <Page title="Rechercher les événements autour de moi | SoNow">
+              <Search />
+              <Nav />
+            </Page>
           )}
         />
         <Route
           path='/autour-de-moi/filtres'
           element={(
-            <>
-            <Filters />
-            <Nav />
-            </>
+            <Page title="Rechercher les événements autour de moi | SoNow">
+              <Filters />
+              <Nav />
+            </Page>
           )}
         />
         <Route
           path='/creer-un-evenement'
           element={(
-            <>
-            <CreateEvent />
-            <Nav />
-            </>
+            <Page title="Créer un événement | SoNow">
+              <CreateEvent />
+              <Nav />
+            </Page>
           )}
         />
         <Route
           path='/mon-compte'
           element={(
-            <>
-            <Profile  />
-            <Nav />
-            </>
+            <Page title="Mon compte | SoNow">
+              <Profile  />
+              <Nav />
+            </Page>
           )}
         />
         <Route
           path='/mon-compte/amis'
           element={(
-            <>
-            <FriendsList />
-            <Nav />
-            </>
+            <Page title="Mes amis | SoNow">
+              <FriendsList />
+              <Nav />
+            </Page>
+          )}
+        />
+        <Route
+          path="/event/:slug"
+          element={(
+            <Page title="Événement | SoNow">
+              <EventCardDescription />
+              <Nav />
+            </Page>
           )}
         />
         <Route
           path='*'
           element={(
-            <>
-            <Error404 />
-            <Nav />
-            </> 
+            <Page title="404 Page introuvable | SoNow">
+              <Error404 />
+              <Nav />
+            </Page>
           )}
         />
       </Routes>
-
     </div>
   );
 }

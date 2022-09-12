@@ -4,17 +4,19 @@ const router = express.Router();
 const userRouter = require('./user');
 const eventRouter = require('./event');
 const tagRouter = require('./tag');
-const authTokenMiddleware = require('../services/authToken');
 
-
+const { ApiError } = require('../services/errorHandler');
 
 router.all('/', async function(_, res) {
-  res.send("Coucou ça marche :D");
+  res.send("Welcome on SoNow API !");
 });
 
 router.use('/user', userRouter);
-router.use('/event', authTokenMiddleware, eventRouter);
-router.use('/tag', authTokenMiddleware, tagRouter);
+router.use('/event', eventRouter);
+router.use('/tag', tagRouter);
 
+router.use(() => {
+  throw new ApiError('API Route not found', { statusCode: 404 });
+});
 
 module.exports = router;

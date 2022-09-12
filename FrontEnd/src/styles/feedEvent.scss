@@ -2,7 +2,7 @@
   position: relative;
   height: 100%;
   width: 100%;
-  background-color: green;
+  border-bottom: 2px solid  white;
 
   &__img {
     position: absolute;
@@ -17,7 +17,7 @@
 
     &__card {
       position: absolute;
-      bottom: 0rem;
+      bottom: 0.1rem;
       left: 0rem;
       width: 100vw;
       padding: 2rem;
@@ -29,6 +29,7 @@
         bottom:8.8rem;
         left: 6rem;
         display: flex;
+        font-size: 0.8rem;
 
         &__content {
           color: white;

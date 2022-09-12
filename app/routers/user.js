@@ -13,7 +13,7 @@ router
     .route('/')
     .get(controllerHandler(controller.getAllUsers));
 
-//Routes pour créer ou connecter l'utilisateur.
+//Routes pour créer ou (dé)connecter l'utilisateur.
 router
     .route('/login')
     .post(controllerHandler(controller.loginUser));
@@ -21,6 +21,10 @@ router
 router
     .route('/signup')
     .post(controllerHandler(controller.createUser));
+
+router
+    .route('/logout')
+    .get(controllerHandler(controller.logoutUser));
 
 //Routes pour récupérer, modifier, supprimer un utilisateur.
 router
@@ -31,8 +35,8 @@ router
 
 //Routes pour qu'un utilisateur recherche un autre utilisateur par son surnom.
 router
-    .route('/nickname')
-    .get(controllerHandler(controller.getOneUserByNickname));
+    .route('/search')
+    .post(controllerHandler(controller.getOneUserByNickname));
 
 
 module.exports = router;

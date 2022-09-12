@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeLoginInputs, submitLogin } from '../store/actions';
 import { Form } from 'semantic-ui-react'
+
 import '../styles/loginForm.scss';
 
 function LoginForm() {
@@ -15,7 +15,7 @@ function LoginForm() {
     passwordInput, 
   } = useSelector((state) => state.login);
 
-  const isConnected = useSelector ((state) => state.user.isConnected);
+  const isConnected = useSelector ((state) => state.user.accessToken);
   
   const handleSubmit=()=>{
     dispatch(submitLogin());
