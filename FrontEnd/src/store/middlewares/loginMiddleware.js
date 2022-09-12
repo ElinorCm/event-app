@@ -4,16 +4,16 @@ import { getEvents, SUBMIT_LOGIN, submitLoginSuccess, submitLoginError, LOGOUT} 
 const loginMiddleware = (store) => (next) => (action) => {
   
   if (action.type === SUBMIT_LOGIN) {
-
-    // console.log('loginMiddleware');
  
     next(action);
 
     const state = store.getState();
 
+    let url = 'https://sonow.herokuapp.com/api/user/login/'
+
     const config = {   
       method: 'post',
-      url: 'https://sonow.herokuapp.com/api/user/login', 
+      url: url + '?nocache=' + new Date().getTime(), 
       headers: { 
         'content-type': 'application/json; charset=utf-8', 
         'Access-Control-Allow-Origin': '*'
@@ -26,7 +26,6 @@ const loginMiddleware = (store) => (next) => (action) => {
 
     axios(config)
       .then((response) => {
-        // console.log(`submit login success ${response.data}`);
         store.dispatch(submitLoginSuccess(response.data.accessToken, response.data.refreshToken, response.data.user));
         localStorage.setItem('accessToken', `${response.data.accessToken}`);
         localStorage.setItem('refreshToken', `${response.data.refreshToken}`);
@@ -38,12 +37,13 @@ const loginMiddleware = (store) => (next) => (action) => {
       });
   
     } else if (action.type === LOGOUT) {
-    // console.log('logoutMiddleware');
     next(action);
+
+    let url = 'https://sonow.herokuapp.com/api/user/logout/'
 
     const config = {   
       method: 'get',
-      url: 'https://sonow.herokuapp.com/api/user/logout', 
+      url: url + '?nocache=' + new Date().getTime(), 
       headers: { 
         'content-type': 'application/json; charset=utf-8', 
         'Access-Control-Allow-Origin': '*'
@@ -55,10 +55,9 @@ const loginMiddleware = (store) => (next) => (action) => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('id');
-        // console.log(`submit logout`);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.message);
       });
   } else {
     next(action);

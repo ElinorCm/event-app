@@ -16,8 +16,8 @@ return (
     </div>
     <div className='authentification__main'>
         <img className='authentification__main__logo' src={logo} alt='SoNow application logo' />
-        <div className="login-container" style={{width: '25rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <div className="login-container__form" style={{}}>
+        <div className="login-container">
+            <div className="login-container__form">
               <Header inverted as='h1' textAlign='center' style={{marginTop: '15px'}}>
                 Se connecter
               </Header>
@@ -25,6 +25,7 @@ return (
               <div className="login-container__form__footer">
               <p>Vous n'avez pas encore de compte ?</p>
               <Link className='login-container__form__footer__link' to="/creer-un-compte">Inscrivez-vous</Link>
+              <Link className="login-container__form__footer__link" to="/a-propos">À propos</Link>
               </div>
             </div>
         </div>

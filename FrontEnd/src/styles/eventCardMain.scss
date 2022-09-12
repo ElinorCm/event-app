@@ -50,7 +50,7 @@
 
       &__participants {
         position: absolute;
-        bottom:12.1rem;
+        bottom: 11.9rem;
         left: 6rem;
         display: flex;
         font-size: 0.8rem;
@@ -80,7 +80,7 @@
 
       &__date {
         position: absolute;
-        bottom: 12.4rem;
+        bottom: 12.35rem;
         left: 2rem;
         display: flex;
         flex-direction: column;
@@ -118,10 +118,27 @@
       right: 1rem;
       display: flex;
       flex-direction: column;
+
     }
 
   }
 
+}
+
+.participate-is-liked {
+  color: #47e916;
+}
+
+.favorite-is-liked {
+  color: #f30067;
+}
+
+.participate-is-disliked {
+  color: #e0e0e0;
+}
+
+.favorite-is-disliked {
+  color: #e0e0e0;
 }
 
 @media screen and (max-width: 370px) {

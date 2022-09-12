@@ -7,13 +7,14 @@ import { Card, Icon } from 'semantic-ui-react';
 import DateCard from './DateCard';
 
 import "../styles/eventCardMain.scss";
-import { getEvents } from '../store/actions';
+import { changeIconsStatus, getEvents } from '../store/actions';
 import { findEventBySlug } from '../selectors/events';
-
 
 function EventCardMain() {
 
   const dispatch = useDispatch();
+  
+  const { iconParticipate: participate, iconFavorite: favorite }  = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getEvents());
@@ -22,10 +23,6 @@ function EventCardMain() {
   const { slug } = useParams();
 
   const event = useSelector((state) => findEventBySlug(state.events.list, slug));
-
-  // const event = useSelector((state) => findEventBySlug(state.events.list, slug));
-
-  // const event = events.find((e) => e.slug === 'pool-party');
   
   return (
     
@@ -41,23 +38,25 @@ function EventCardMain() {
               />
             <section className='event-description__details'>
             <section className='event-description__details__social-icons'>
-              <Icon 
+              <Icon
+                className={participate ? 'participate-is-liked' : 'participate-is-disliked'}
                 name='check square' 
                 size='large'
                 style={{ 
-                  color: '#E0E0E0',
                   marginTop: '0.6em',
                   cursor: 'pointer',
                 }}
+                onClick={() => dispatch(changeIconsStatus('iconParticipate'))}
               />            
               <Icon 
+                className={favorite ? 'favorite-is-liked' : 'favorite-is-disliked'}
                 name='heart' 
                 size='large'
                 style={{ 
-                  color: '#E0E0E0',
                   marginTop: '0.6em',
                   cursor: 'pointer',
                 }}
+                onClick={() => dispatch(changeIconsStatus('iconFavorite'))}
               />
           </section>
               <section className="event-description__details__card">
@@ -90,8 +89,7 @@ function EventCardMain() {
                       paddingBottom: '0.6rem'
                     }}
                   >
-                    Jean-Michel
-                    {/* {event.code_user_manager} */}
+                    {event.code_user_manager}
               </Card.Header>
                   <Card.Meta
                     style={{
@@ -108,21 +106,6 @@ function EventCardMain() {
                   >
                     {event.description}
                   </Card.Description>
-                  <Card.Content>
-                    {/*
-                      event.tag.map((t) => {
-                        return (
-                          <Label 
-                          key={t.id}
-                          //remove white spaces to use category name as slug
-                          href={`/categorie/${t.name.replace(' ', '')}`}
-                          >
-                            {t.emoji} {t.name}
-                          </Label>
-                        )
-                      })
-                    */}
-                  </Card.Content>
                 </Card>
                 <section className="event-description__details__card__participants">
                   <Icon 
@@ -131,11 +114,21 @@ function EventCardMain() {
                       color:'white'
                     }} 
                   />
-                  {/*
-                  <p className="event-description__details__card__participants__content" >
-                    {event.user_attend_event.length} participants
-                  </p>
-                  */}
+                    { event.user_pin.length > 1 &&
+                    <p className='event-card-secondary__details__card__participants__content' >
+                      {event.user_pin.length} participants
+                    </p>
+                    }
+                    { event.user_pin.length === 1 &&
+                    <p className='event-card-secondary__details__card__participants__content' >
+                      {event.user_pin.length} participant
+                    </p>
+                    }
+                    { event.user_pin.length === 0 &&
+                    <p className='event-card-secondary__details__card__participants__content' >
+                      Soyez le premier participant ! 
+                    </p>
+                    }
                 </section>
                 <section className="event-description__details__card__date">
                 <DateCard 

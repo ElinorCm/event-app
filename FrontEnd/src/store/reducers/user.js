@@ -1,6 +1,7 @@
 import {
   CHANGE_FRIENDS_ACTIVE_ITEM, 
-  CHANGE_FAVORITES_ACTIVE_ITEM, 
+  CHANGE_FAVORITES_ACTIVE_ITEM,
+  CHANGE_ICONS_STATUS,
   CHANGE_LOGIN_INPUTS, 
   CHANGE_PROFIL_ACTIVE_ITEM,
   CHANGE_SIGNUP_INPUTS,
@@ -71,7 +72,11 @@ const initialState = {
   subscriptions: {
     list: [], 
     isLoading: false, 
-  }
+  },
+  iconParticipate: false,
+  iconFavorite: false,
+
+  confirmStatus: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -83,6 +88,11 @@ const reducer = (state = initialState, action) => {
           ...state.favorites, 
           activeItem: action.activeItem,
         }
+      };
+    case CHANGE_ICONS_STATUS:
+      return {
+        ...state,
+        [action.iconsName]: !state[action.iconsName]
       };
     case CHANGE_FRIENDS_ACTIVE_ITEM:
       return {

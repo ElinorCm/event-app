@@ -1,11 +1,17 @@
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { Card, Icon, Label } from 'semantic-ui-react';
 
 import DateCard from './DateCard';
 
-import '../styles/eventCardSecondary.scss'; 
+import '../styles/eventCardSecondary.scss';
+import { changeIconsStatus } from '../store/actions';
 
 function EventCardSecondary({ event, params }) {
+
+  const dispatch = useDispatch();
+
+  const { iconParticipate: participate, iconFavorite: favorite }  = useSelector((state) => state.user);
 
   return (
     <Link to={`/event/${event.slug}`}>
@@ -17,25 +23,32 @@ function EventCardSecondary({ event, params }) {
         />
         <section className='event-card-secondary__details'>
           <section className={params === 'autour-de-moi'? 'event-card-secondary__details__social-icons hidden' : 'event-card-secondary__details__social-icons'}>
+              <Link to={'#'}>
+                <Icon
+                  className={participate ? 'participate-is-liked' : 'participate-is-disliked'}
+                  name='check square' 
+                  size='large'
+                  style={{ 
+                    marginTop: '0.6em',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => dispatch(changeIconsStatus('iconParticipate'))}
+                />
+              </Link>
+              <Link to={'#'}>          
               <Icon 
-                name='check square' 
-                size='large'
-                style={{ 
-                  color: '#E0E0E0',
-                  marginTop: '0.6em',
-                  cursor: 'pointer',
-                }}
-              />            
-              <Icon 
+                className={favorite ? 'favorite-is-liked' : 'favorite-is-disliked'}
                 name='heart' 
                 size='large'
                 style={{ 
-                  color: '#E0E0E0',
                   marginTop: '0.6em',
                   cursor: 'pointer',
                 }}
+                onClick={() => dispatch(changeIconsStatus('iconFavorite'))}
               />
-              <Icon 
+              </Link>
+              <Link to={'#'}>
+              <Icon
                 name='comment' 
                 size='large'
                 style={{ 
@@ -44,6 +57,8 @@ function EventCardSecondary({ event, params }) {
                   cursor: 'pointer',
                 }}
                 />
+              </Link>
+              <Link to={'#'}>
               <Icon 
                 name='share' 
                 size='large'
@@ -53,6 +68,7 @@ function EventCardSecondary({ event, params }) {
                   cursor: 'pointer',
                 }}
                 />
+              </Link>
           </section>
           <section className='event-card-secondary__details__card'>
             <Card 
@@ -64,6 +80,7 @@ function EventCardSecondary({ event, params }) {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                marginBottom: '0px',
               }}
             >
               <Card.Header
@@ -102,8 +119,7 @@ function EventCardSecondary({ event, params }) {
                 {event.metadescription}
               </Card.Description>
               <Card.Content className={params === 'autour-de-moi'? 'event-card-secondary__details__card__labels hidden' : 'event-card-secondary__details__card__labels'}>
-              
-                {/*
+                {
                   event.tag.map((t) => {
                     return (
                       <Label 
@@ -111,26 +127,11 @@ function EventCardSecondary({ event, params }) {
                       //remove white spaces to use category name as slug
                       href={`/categorie/${t.name.replace(' ', '')}`}
                       >
-                        {t.emoji} {t.name}
+                        {t.name}
                       </Label>
                     )
                   })
-                */}
-                <Label 
-                  key={1}
-                  >
-                    👯  Entre amis
-                </Label>
-                <Label 
-                  key={2}
-                  >
-                    🕺  Danse
-                </Label>
-                <Label 
-                  key={3}
-                  >
-                    🎶  Musique
-                </Label>
+                }
               </Card.Content>
             </Card>
             <section className='event-card-secondary__details__card__participants'>
@@ -140,9 +141,21 @@ function EventCardSecondary({ event, params }) {
                   color:'white'
                 }} 
               />
+              { event.user_pin.length > 1 &&
               <p className='event-card-secondary__details__card__participants__content' >
-                {/* event.user_attend_event.length*/} 412 participants
+                {event.user_pin.length} participants
               </p>
+              }
+              { event.user_pin.length === 1 &&
+              <p className='event-card-secondary__details__card__participants__content' >
+                {event.user_pin.length} participant
+              </p>
+              }
+              { event.user_pin.length === 0 &&
+              <p className='event-card-secondary__details__card__participants__content' >
+                Soyez le premier participant ! 
+              </p>
+              }
             </section>
             <section className='event-card-secondary__details__card__date'>
               <DateCard 

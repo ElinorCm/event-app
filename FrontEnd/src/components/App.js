@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 // import DistanceCalculator from 'distance-calculator-js';
 
+import About from './About';
 import Authentification from './Authentification';
 import CreateAccount from './CreateAccount';
 import CreateEvent from './CreateEvent';
@@ -23,7 +24,6 @@ const NewYork = { lat: 40.730610, long: -73.935242 };
 // Use of Haversine formula 
 // Result converted from meters to kilometers
 const m = DistanceCalculator.calculate(Tokyo, NewYork)/1000;
-console.log(m);
 */
 
 function App() {
@@ -51,6 +51,13 @@ function App() {
   return (
     <div className='App'>
       <Routes>
+        <Route path="/a-propos"
+          element={(
+            <Page title="À propos">
+              <About />
+            </Page>
+          )} 
+        />
         <Route
           path='/'
           element={(

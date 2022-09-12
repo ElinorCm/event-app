@@ -21,9 +21,11 @@ const eventsMiddleware = (store) => (next) => (action) => {
     next(action);
     const state = store.getState();
 
+    let url = 'https://sonow.herokuapp.com/api/event/'
+
     const config = {   
       method: 'get',
-      url: 'https://sonow.herokuapp.com/api/event', 
+      url: url + '?nocache=' + new Date().getTime(), 
       headers: { 
         'content-type': 'application/json; charset=utf-8',
         'Access-Control-Allow-Origin': '*',
@@ -34,7 +36,6 @@ const eventsMiddleware = (store) => (next) => (action) => {
     if (!state.events.list || state.events.list.length === 0) {
       axios(config)
         .then((response) => {
-          // console.log(response.data);
           store.dispatch(getEventsSuccess(response.data));
         })
         .catch(() => {
@@ -50,9 +51,11 @@ const eventsMiddleware = (store) => (next) => (action) => {
     const state = store.getState();
     const id = state.event.activeEvent.toString();
 
+    let url = `https://sonow.herokuapp.com/api/event/${id}/`;
+
     const config = {
       method: 'get',
-      url: `http://sonow.herokuapp.com/api/event/${id}`, 
+      url: url + '?nocache=' + new Date().getTime(), 
       headers: { 
         'content-type': 'application/json; charset=utf-8', 
         'Access-Control-Allow-Origin': '*',
@@ -62,7 +65,6 @@ const eventsMiddleware = (store) => (next) => (action) => {
 
     axios(config)
       .then((response) => {
-        console.log(response.data);
         store.dispatch(getEventSuccess(response.data));
       })
       .catch(() => {
@@ -72,10 +74,12 @@ const eventsMiddleware = (store) => (next) => (action) => {
     } else if (action.type === GET_TAGS) {
       next(action);
       const state = store.getState();
+
+      let url = 'https://sonow.herokuapp.com/api/tag/withevents/';
       
       const config = {   
         method: 'get',
-        url: 'http://sonow.herokuapp.com/api/tag/withevents', 
+        url: url + '?nocache=' + new Date().getTime(), 
         headers: { 
           'content-type': 'application/json; charset=utf-8', 
           'Access-Control-Allow-Origin': '*',
@@ -85,7 +89,6 @@ const eventsMiddleware = (store) => (next) => (action) => {
     
       axios(config)
         .then((response) => {
-          console.log(response.data);
           store.dispatch(getTagsSuccess(response.data));
         })
         .catch(() => {
@@ -96,10 +99,12 @@ const eventsMiddleware = (store) => (next) => (action) => {
   } else if (action.type === SUBMIT_EVENTS_SEARCH) {
     next(action);
     const state = store.getState();
+
+    let url = 'https://sonow.herokuapp.com/api/event/search/';
     
     const config = {   
       method: 'post',
-      url: 'https://sonow.herokuapp.com/api/event/search', 
+      url: url + '?nocache=' + new Date().getTime(),
       headers: { 
         'content-type': 'application/json; charset=utf-8', 
         'Access-Control-Allow-Origin': '*',
@@ -112,10 +117,10 @@ const eventsMiddleware = (store) => (next) => (action) => {
   
     axios(config)
       .then((response) => {
-        console.log(response.data);
         store.dispatch(submitEventsSearchSuccess(response.data));
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error.message);
         store.dispatch(submitEventsSearchError());
       });
 

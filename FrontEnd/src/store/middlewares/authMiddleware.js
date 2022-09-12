@@ -5,17 +5,16 @@ import { SUBMIT_SIGNUP } from '../actions';
 const authMiddleware = (store) => (next) => (action) => {
   if (action.type === SUBMIT_SIGNUP) {
 
-    console.log('authMiddleware');
-
     next(action);
 
     const state = store.getState();
 
-    console.log(state.user.signup.firstnameInput);
+    let url = 'https://sonow.herokuapp.com/api/user/signup/'
 
     const config = {   
       method: 'post',
-      url: 'https://sonow.herokuapp.com/api/user/signup', 
+      url: url + '?nocache=' + new Date().getTime(),
+
       headers: { 
         'content-type': 'application/json; charset=utf-8', 
         'Access-Control-Allow-Origin': '*'
@@ -31,7 +30,6 @@ const authMiddleware = (store) => (next) => (action) => {
 
     axios(config)
       .then(() => {
-        console.log('submit success');
         store.dispatch(submitSignupSuccess());
       })
       .catch(() => {

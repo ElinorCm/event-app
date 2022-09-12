@@ -66,7 +66,8 @@ function FriendsList() {
           </div>
         </Menu>
         <Form className='friends__form'>
-          <Form.Input 
+          <Form.Input
+            style={{marginTop: '1rem'}}
             loading={isSearchLoading}
             icon={{ name: 'users', link: true}}
             placeholder='Rechercher...'
@@ -79,7 +80,7 @@ function FriendsList() {
           />
         </Form>
         <div className='friends__list'>
-        {
+          {
             searchResults.length > 0
             &&
             searchResults.map((u) => (

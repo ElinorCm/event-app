@@ -4,6 +4,7 @@ export const CHANGE_FAVORITES_ACTIVE_ITEM = 'CHANGE_FAVORITES_ACTIVE_ITEM';
 export const CHANGE_FRIENDS_ACTIVE_ITEM = 'CHANGE_FRIENDS_ACTIVE_ITEM';
 export const CHANGE_PROFIL_ACTIVE_ITEM = 'CHANGE_PROFIL_ACTIVE_ITEM';
 export const CHANGE_USERS_SEARCH_INPUT= 'CHANGE_USERS_SEARCH_INPUT';
+export const CHANGE_ICONS_STATUS = 'CHANGE_ICONS_STATUS';
 export const CHANGE_LOGIN_INPUTS = 'CHANGE_LOGIN_INPUTS';
 export const CHANGE_SIGNUP_INPUTS = 'CHANGE_SIGNUP_INPUTS';
 export const GET_EVENT = 'GET_EVENT';
@@ -37,6 +38,7 @@ export const GET_USERS = 'GET_USERS';
 export const GET_USERS_ERROR = 'GET_USERS_ERROR'; 
 export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
 export const LOGOUT = 'LOGOUT';
+export const REMOVE_SEARCH_ERROR = 'REMOVE_SEARCH_ERROR';
 export const SUBMIT_EVENTS_SEARCH = 'SUBMIT_EVENTS_SEARCH';
 export const SUBMIT_EVENTS_SEARCH_SUCCESS = 'SUBMIT_EVENTS_SEARCH_SUCCESS';
 export const SUBMIT_EVENTS_SEARCH_ERROR = 'SUBMIT_EVENTS_SEARCH_ERROR';
@@ -279,4 +281,13 @@ export const submitEventsSearchError= () => ({
 
 export const logout = () => ({
   type: LOGOUT,
+});
+
+export const changeIconsStatus = (iconsName) => ({
+  type: CHANGE_ICONS_STATUS,
+  iconsName,
+});
+
+export const removeSearchError = () => ({
+  type: REMOVE_SEARCH_ERROR,
 });
